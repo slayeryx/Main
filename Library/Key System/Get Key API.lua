@@ -23,7 +23,7 @@ return {
     },
 
     ["LootLabs"] = {
-      Url = "",
+      Url = "https://loot-link.com/s?CYtsbcpI",
       Icon = 81598390322167,
     },
 
