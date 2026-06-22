@@ -18,7 +18,7 @@ return {
   
   [79268393072444] = { -- Sell Lemons
     ["Linkvertise"] = {
-      Url = "",
+      Url = "https://ads.luarmor.net/get_key?for=Speed_Hub_X_Linkvertise-jOqPFgJvjYNe",
       Icon = 122637139040192,
     },
 
