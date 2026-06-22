@@ -1,0 +1,134 @@
+-- KeySystemV1
+
+-- Clean up any existing instance
+do
+    local ui = game.CoreGui:FindFirstChild("SpeedHubKeySystem")
+    if ui then ui:Destroy() end
+end
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local library = {}
+
+function library:Open(gameName, placeId, providers, onKeySubmit)
+    local Window = Fluent:CreateWindow({
+        Title       = "Speed Hub X",
+        SubTitle    = "Key System  —  " .. tostring(gameName),
+        TabWidth    = 140,
+        Size        = UDim2.fromOffset(500, 320),
+        Acrylic     = true,
+        Theme       = "Dark",
+        MinimizeKey = Enum.KeyCode.RightControl,
+    })
+
+    local Tab = Window:AddTab({ Title = "Key System", Icon = "key" })
+
+    -- Status paragraph, updated throughout
+    local Status = Tab:AddParagraph({
+        Title   = "Status",
+        Content = "Get a key from one of the providers below, then paste it.",
+    })
+
+    Tab:AddDivider()
+
+    -- Provider buttons — only shown if URL is set
+    local hasProvider = false
+    for provider, data in next, providers do
+        if type(data.Url) == "string" and #data.Url > 0 then
+            hasProvider = true
+            Tab:AddButton({
+                Title       = "Get Key  [" .. provider .. "]",
+                Description = "Copy the " .. provider .. " key link to clipboard",
+                Callback    = function()
+                    local copied = false
+                    if setclipboard then
+                        pcall(setclipboard, data.Url)
+                        copied = true
+                    elseif syn and syn.write_clipboard then
+                        pcall(syn.write_clipboard, data.Url)
+                        copied = true
+                    end
+
+                    if copied then
+                        Status:Set("Status", "Copied! Paste the link into your browser to get your key.")
+                        Fluent:Notify({
+                            Title    = "Link Copied",
+                            Content  = provider .. " key link copied to clipboard.",
+                            Duration = 4,
+                        })
+                    else
+                        Status:Set("Status", "No clipboard access. Check output for the link.")
+                        print("[Key System] " .. provider .. " URL: " .. data.Url)
+                        Fluent:Notify({
+                            Title    = "No Clipboard",
+                            Content  = "Link printed to output.",
+                            Duration = 4,
+                        })
+                    end
+                end,
+            })
+        end
+    end
+
+    if not hasProvider then
+        Tab:AddParagraph({
+            Title   = "No Providers",
+            Content = "No key providers are configured for this game yet.",
+        })
+    end
+
+    Tab:AddDivider()
+
+    -- Key input
+    local keyValue = ""
+    Tab:AddInput("KeyInput", {
+        Title       = "Your Key",
+        Description = "Paste your key here",
+        Placeholder = "Speed-Hub-XXXX-XXXX",
+        Numeric     = false,
+        Finished    = false,
+        Callback    = function(val)
+            keyValue = tostring(val)
+        end,
+    })
+
+    Tab:AddButton({
+        Title       = "Submit Key",
+        Description = "Validate and load the hub",
+        Callback    = function()
+            if #keyValue == 0 then
+                Fluent:Notify({
+                    Title    = "No Key",
+                    Content  = "Please enter your key first.",
+                    Duration = 3,
+                })
+                return
+            end
+
+            Status:Set("Status", "Validating key...")
+
+            local ok, err = pcall(onKeySubmit, keyValue)
+            if ok then
+                Status:Set("Status", "Key accepted! Loading hub...")
+                Fluent:Notify({
+                    Title    = "Success",
+                    Content  = "Hub loaded for " .. tostring(gameName),
+                    Duration = 4,
+                })
+                Window:Destroy()
+            else
+                Status:Set("Status", "Failed: " .. tostring(err))
+                Fluent:Notify({
+                    Title    = "Error",
+                    Content  = tostring(err),
+                    Duration = 6,
+                })
+                warn("[Key System] Load failed: " .. tostring(err))
+            end
+        end,
+    })
+
+    Window:SelectTab(1)
+end
+
+return library
