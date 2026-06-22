@@ -1,6 +1,5 @@
--- KeySystemV1
+-- KeySystemV2
 
--- Clean up any existing instance
 do
     local ui = game.CoreGui:FindFirstChild("SpeedHubKeySystem")
     if ui then ui:Destroy() end
@@ -23,15 +22,12 @@ function library:Open(gameName, placeId, providers, onKeySubmit)
 
     local Tab = Window:AddTab({ Title = "Key System", Icon = "key" })
 
-    -- Status paragraph, updated throughout
     local Status = Tab:AddParagraph({
         Title   = "Status",
         Content = "Get a key from one of the providers below, then paste it.",
     })
 
-    Tab:AddDivider()
-
-    -- Provider buttons — only shown if URL is set
+    -- Provider buttons
     local hasProvider = false
     for provider, data in next, providers do
         if type(data.Url) == "string" and #data.Url > 0 then
@@ -50,14 +46,14 @@ function library:Open(gameName, placeId, providers, onKeySubmit)
                     end
 
                     if copied then
-                        Status:Set("Status", "Copied! Paste the link into your browser to get your key.")
+                        Status:Set("Copied! Paste the link into your browser to get your key.")
                         Fluent:Notify({
                             Title    = "Link Copied",
                             Content  = provider .. " key link copied to clipboard.",
                             Duration = 4,
                         })
                     else
-                        Status:Set("Status", "No clipboard access. Check output for the link.")
+                        Status:Set("No clipboard access. Check output for the link.")
                         print("[Key System] " .. provider .. " URL: " .. data.Url)
                         Fluent:Notify({
                             Title    = "No Clipboard",
@@ -76,8 +72,6 @@ function library:Open(gameName, placeId, providers, onKeySubmit)
             Content = "No key providers are configured for this game yet.",
         })
     end
-
-    Tab:AddDivider()
 
     -- Key input
     local keyValue = ""
@@ -105,11 +99,10 @@ function library:Open(gameName, placeId, providers, onKeySubmit)
                 return
             end
 
-            Status:Set("Status", "Validating key...")
+            Status:Set("Validating key...")
 
             local ok, err = pcall(onKeySubmit, keyValue)
             if ok then
-                Status:Set("Status", "Key accepted! Loading hub...")
                 Fluent:Notify({
                     Title    = "Success",
                     Content  = "Hub loaded for " .. tostring(gameName),
@@ -117,7 +110,7 @@ function library:Open(gameName, placeId, providers, onKeySubmit)
                 })
                 Window:Destroy()
             else
-                Status:Set("Status", "Failed: " .. tostring(err))
+                Status:Set("Failed: " .. tostring(err))
                 Fluent:Notify({
                     Title    = "Error",
                     Content  = tostring(err),
