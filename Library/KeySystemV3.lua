@@ -22,11 +22,11 @@ local Config = {
     HubDescription  = "click to get a key",
 
     ShowDiscord     = true,
-    DiscordURL      = "https://discord.gg/kT55J724BK",
+    DiscordURL      = "https://discord.gg/Bne7AMSBms",
     ShowInstagram   = false,
     InstagramURL    = "https://www.instagram.com/oyb0i/",
-    ShowYoutube     = false,
-    YoutubeURL      = "https://www.youtube.com/channel/UCAlXXV1Hbvf7WbfXARuVtiQ",
+    ShowYoutube     = true,
+    YoutubeURL      = "https://www.youtube.com/channel/UCdDRgZVB5hkeOthVDlHEJDQ",
 }
 
 -------------------------------------------------------------------------------
