@@ -32,4 +32,20 @@ return {
       Icon = 137084367454843,
     },
   },
+  [6516141723] = { -- Doors
+    ["Linkvertise"] = {
+      Url = "https://ads.luarmor.net/get_key?for=Speed_Hub_X_Linkvertise-jOqPFgJvjYNe",
+      Icon = 122637139040192,
+    },
+
+    ["LootLabs"] = {
+      Url = "https://loot-link.com/s?CYtsbcpI",
+      Icon = 81598390322167,
+    },
+
+    ["Work.ink"] = {
+      Url = "",
+      Icon = 137084367454843,
+    },
+  },
 }
