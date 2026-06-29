@@ -32,7 +32,7 @@ return {
       Icon = 137084367454843,
     },
   },
-  [6839171747 ] = { -- Doors
+  [6839171747] = { -- Doors
     ["Linkvertise"] = {
       Url = "https://ads.luarmor.net/get_key?for=Speed_Hub_X_Linkvertise-jOqPFgJvjYNe",
       Icon = 122637139040192,
